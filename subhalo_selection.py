@@ -19,7 +19,7 @@ def select_subhalo_indices(host_halo_occupations, host_halo_binning_property,
     upper_indices = np.searchsorted(bin_edges, sorted_satellite_host_property)
     lower_indices = upper_indices - 1
 
-    subhalo_indices = subhalo_index_selection(lower_indices, upper_indices)
+    subhalo_indices = np.array(subhalo_index_selection(lower_indices, upper_indices))
 
     idx_unsorted = unsorting_indices(idx_satellite_host_property)
     return subhalo_indices[idx_unsorted]
