@@ -52,7 +52,7 @@ def mean_nsub_vs_mhost(mhost_array, log10_msub_min, log10_mu_max=0., log10_mhost
     return np.interp(np.log10(mhost_array), log10_mhost_grid, mean_nsub_grid)
 
 
-def monte_carlo_subhalo_mass(mhost, log10_msub_min, counts):
+def monte_carlo_subhalo_mass(mhost, log10_msub_min, counts, randoms=None):
     """ For an input host halo mass, generate a Monte Carlo realization
     of the Mpeak values of a subhalo population according to the unevolved mass function
     given by Eq. (21) of Jiang & van den Bosch (2014), arXiv:1311.5225.
@@ -62,8 +62,17 @@ def monte_carlo_subhalo_mass(mhost, log10_msub_min, counts):
     mhost : float
         Mass of the host halo in Msun/h
 
+    log10_msub_min : float
+        Lower limit on the returned subhalo masses, typically determined by
+        the resolution of the simulation
+
     counts : int
         Number of satellites in the halo
+
+    randoms : ndarray, optional
+        Array to use as uniform randoms in the Monte Carlo realization.
+        Smaller values of randoms will correlate with larger values of mu.
+        Default is None for stochastic Mpeak values.
 
     Returns
     --------
@@ -81,8 +90,12 @@ def monte_carlo_subhalo_mass(mhost, log10_msub_min, counts):
         for log10_mu in log10_mu_grid))
     mu_cdf_grid = num_subs_grid/num_subs_above_mu_min
 
-    uran = np.random.rand(counts)
-    mc_log10_mu = np.interp(uran, mu_cdf_grid, log10_mu_grid)
+    if randoms is None:
+        randoms = np.random.rand(counts)
+    else:
+        assert np.shape(randoms) == (counts, )
+
+    mc_log10_mu = np.interp(randoms, mu_cdf_grid, log10_mu_grid)
     return 10**mc_log10_mu
 
 
