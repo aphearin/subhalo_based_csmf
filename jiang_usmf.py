@@ -53,25 +53,22 @@ def mean_nsub_vs_mhost(mhost_array, log10_msub_min, log10_mu_max=0., log10_mhost
 
 
 def monte_carlo_subhalo_mass(mhost, log10_msub_min, counts):
-    """ For an input system of host halo masses, generate
-    a Monte Carlo realization of the subhalo population whose occupation statistics
-    is determined by Eq. (21) of Jiang & van den Bosch (2014), arXiv:1311.5225.
+    """ For an input host halo mass, generate a Monte Carlo realization
+    of the Mpeak values of a subhalo population according to the unevolved mass function
+    given by Eq. (21) of Jiang & van den Bosch (2014), arXiv:1311.5225.
 
     Parameters
     ----------
-    mhost_array : ndarray
-        Numpy array of shape (num_hosts, ) storing the mass in Msun/h
-        of each host halo that will be assigned a distribution of subhalo masses.
+    mhost : float
+        Mass of the host halo in Msun/h
 
-    counts_array : ndarray
-        Integer array of shape (num_hosts, ) storing the total number of subhalos
-        more massive than msub_min in each host halo. The sum of the entries
-        in counts_array defines num_total_subs
+    counts : int
+        Number of satellites in the halo
 
     Returns
     --------
     msub_array : ndarray
-        Numpy array of shape (num_total_subs, ) storing a Monte Carlo realization
+        Numpy array of shape (counts, ) storing a Monte Carlo realization
         of the mpeak value of every subhalo.
 
     """
