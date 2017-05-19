@@ -8,13 +8,14 @@ def select_subhalo_indices(satellite_host_property,
     """
     """
     __ = _check_bins_span_range(satellite_host_property, bin_edges)
-
     satellite_bin_indices = np.digitize(satellite_host_property, bin_edges) - 1
+
     subhalo_bin_indices = np.searchsorted(sorted_subhalo_host_property, bin_edges)
+    __ = _check_subhalos_are_sufficient(subhalo_bin_indices)
+
     high = subhalo_bin_indices[satellite_bin_indices+1]
     low = subhalo_bin_indices[satellite_bin_indices]
-    result = np.floor(np.random.rand(len(low))*(high - low) + low)
-    return result.astype(int)
+    return np.array(np.floor(np.random.rand(len(low))*(high - low) + low)).astype(int)
 
 
 def _check_bins_span_range(x, bin_edges):
@@ -30,6 +31,9 @@ def _check_bins_span_range(x, bin_edges):
             bin_edges[-1], np.max(x)))
     assert bin_edges[-1] > np.max(x), msg
 
+
+def _check_subhalos_are_sufficient(subhalo_bin_indices):
+    assert np.all(np.diff(subhalo_bin_indices) > 0), "Must have at least one subhalo per bin"
 
 
 
