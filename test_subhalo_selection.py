@@ -10,7 +10,7 @@ def test_select_subhalo_indices1():
 
     satellite_host_property = [0.5, 1, 2.5, 4.5]
     num_sats = int(1e5)
-    satellite_host_property = np.linspace(0.5, 4.5, num_sats)
+    satellite_host_property = np.random.uniform(0.5, 4.5, num_sats)
     bin_edges = [0, 2, 4, 6]
 
     sorted_subhalo_host_property = [0.5, 0.5, 0.5, 2.5, 2.5, 2.5, 5.5, 5.5, 5.5]
@@ -53,4 +53,3 @@ def test_select_subhalo_indices2():
             bin_edges, sorted_subhalo_host_property)
     substr = "Must have at least one subhalo per bin"
     assert substr in err.value.args[0]
-
