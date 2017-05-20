@@ -106,7 +106,7 @@ def monte_carlo_subhalo_population(mhost_array, log10_msub_min, log10_mhost_bins
     """
     """
     mean_nsub = mean_nsub_vs_mhost(mhost_array, log10_msub_min, **kwargs)
-    mc_nsub = poisson.rvs(mean_nsub)
+    mc_nsub = poisson.rvs(np.maximum(mean_nsub, 0))
 
     log10_mhost_array = np.log10(mhost_array)
     mc_subhalo_mpeak = np.zeros(np.sum(mc_nsub))
