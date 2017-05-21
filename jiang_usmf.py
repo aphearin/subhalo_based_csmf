@@ -109,32 +109,40 @@ def monte_carlo_subhalo_mass(mhost, log10_msub_min, counts, randoms=None, **kwar
     return 10**mc_log10_mu
 
 
-def monte_carlo_subhalo_population(mhost_array, log10_msub_min, log10_mhost_bins,
+def monte_carlo_subhalo_population(mhost_array, log10_msub_min, log10_mhost_bin_edges,
         **kwargs):
     """
     """
-    __ = _check_bins(mhost_array, 10**log10_mhost_bins)
+    __ = _check_bins(mhost_array, 10**log10_mhost_bin_edges)
 
-    log10_mhost_bins[-1] = log10_mhost_bins[-1] + 0.001
+    log10_mhost_bin_edges[-1] = log10_mhost_bin_edges[-1] + 0.001
     mean_nsub = mean_nsub_vs_mhost(mhost_array, log10_msub_min, **kwargs)
 
     try:
         uniform_variate = kwargs['percentile']
     except:
         uniform_variate = np.random.rand(len(mean_nsub))
-    mc_nsub = poisson.isf(1 - uniform_variate, np.maximum(mean_nsub, 0))
+    mc_nsub = poisson.isf(1 - uniform_variate, np.maximum(mean_nsub, 0)).astype('i4')
 
     log10_mhost_array = np.log10(mhost_array)
-    mc_subhalo_mpeak = np.zeros(np.sum(mc_nsub)) - 1
 
-    counter = 0
-    for i in range(len(log10_mhost_bins)-1):
-        log10_mhost_low, log10_mhost_high = log10_mhost_bins[i], log10_mhost_bins[i+1]
+    num_subs = int(np.sum(mc_nsub))
+    mc_subhalo_mpeak = np.zeros(num_subs, dtype='f8')
+
+    for i in range(len(log10_mhost_bin_edges)-1):
+        log10_mhost_low, log10_mhost_high = log10_mhost_bin_edges[i], log10_mhost_bin_edges[i+1]
         mhost_mid = 10**(0.5*(log10_mhost_low + log10_mhost_high))
         host_halo_mask = (log10_mhost_array >= log10_mhost_low) & (log10_mhost_array < log10_mhost_high)
-        counter += np.count_nonzero(host_halo_mask)
+        num_hosts_ibin = np.count_nonzero(host_halo_mask)
+        num_subs_ibin = int(np.sum(mc_nsub[host_halo_mask]))
+        msg = ("\nMust have at least one subhalo per bin:\n"
+            "ibin = {0}, log10_mhost_low = {1:.2f}, log10_mhost_high = {2:.2f}\n"
+            "num_hosts_ibin = {3}, num_subs_ibin = {4}\n"
+            "Modify your mass bins or use a different host/subhalo catalog")
+        assert num_subs_ibin > 0, msg.format(i, log10_mhost_low, log10_mhost_high,
+            num_hosts_ibin, num_subs_ibin)
         subhalo_masses_ibin = monte_carlo_subhalo_mass(mhost_mid, log10_msub_min,
-            np.sum(mc_nsub[host_halo_mask]), **kwargs)
+            num_subs_ibin, **kwargs)
         subhalo_mask = np.repeat(host_halo_mask, mc_nsub)
         mc_subhalo_mpeak[subhalo_mask] = subhalo_masses_ibin*np.repeat(
             mhost_array[host_halo_mask], mc_nsub[host_halo_mask])
