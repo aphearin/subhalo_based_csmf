@@ -121,7 +121,6 @@ def monte_carlo_subhalo_population(mhost_array, log10_msub_min, log10_mhost_bins
 
     log10_mhost_array = np.log10(mhost_array)
     mc_subhalo_mpeak = np.zeros(np.sum(mc_nsub)) - 1
-    matched_host_array = np.zeros(len(mhost_array), dtype=bool)
 
     counter = 0
     for i in range(len(log10_mhost_bins)-1):
@@ -129,17 +128,12 @@ def monte_carlo_subhalo_population(mhost_array, log10_msub_min, log10_mhost_bins
         mhost_mid = 10**(0.5*(log10_mhost_low + log10_mhost_high))
         host_halo_mask = (log10_mhost_array >= log10_mhost_low) & (log10_mhost_array < log10_mhost_high)
         counter += np.count_nonzero(host_halo_mask)
-        matched_host_array[host_halo_mask] = True
         subhalo_masses_ibin = monte_carlo_subhalo_mass(mhost_mid, log10_msub_min,
             np.sum(mc_nsub[host_halo_mask]), **kwargs)
         subhalo_mask = np.repeat(host_halo_mask, mc_nsub)
         mc_subhalo_mpeak[subhalo_mask] = subhalo_masses_ibin*np.repeat(
             mhost_array[host_halo_mask], mc_nsub[host_halo_mask])
 
-    print("Number of hosts used = {0}\nNumber of total hosts = {1}".format(
-        len(mhost_array), counter))
-    print("Number of missing hosts = {0}".format(len(mhost_array) - counter))
-    print("Missing host masses = {0}".format(mhost_array[~matched_host_array]))
     return mc_nsub, mc_subhalo_mpeak
 
 
