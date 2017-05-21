@@ -9,13 +9,13 @@ from refit_jiang_usmf import chi2_subhalo_counts
 import csv
 
 
-beta_min, beta_max, num_beta = 4.5, 7.5, 5
+beta_min, beta_max, num_beta = 4.5, 7.5, 10
 beta_grid_default = np.linspace(beta_min, beta_max, num_beta)
 
-alpha1_min, alpha1_max, num_alpha1 = -0.8, -1, 5
+alpha1_min, alpha1_max, num_alpha1 = -0.8, -1, 15
 alpha1_grid_default = np.linspace(alpha1_min, alpha1_max, num_alpha1)
 
-gamma2_min, gamma2_max, num_gamma2 = 0.1, 1.5, 5
+gamma2_min, gamma2_max, num_gamma2 = 0.1, 1.5, 25
 gamma2_grid_default = np.linspace(gamma2_min, gamma2_max, num_gamma2)
 
 
@@ -49,7 +49,9 @@ def refit_params(**param_iterators):
            writer.writerow([key, value])
 
     start = time()
+    counter = 0
     for param_dict in gen:
+        counter += 1
         beta = param_dict.get('beta', jiang14_param_dict['beta'])
         zeta = param_dict.get('zeta', jiang14_param_dict['zeta'])
         gamma1 = param_dict.get('gamma1', jiang14_param_dict['gamma1'])
@@ -67,6 +69,10 @@ def refit_params(**param_iterators):
                 for key, value in best_fit_param_dict.items():
                    writer.writerow([key, value])
 
+        if counter % 150 == 0:
+            print("...working on {0} of {1}".format(counter, total_grid_size))
 
 
+refit_params()
+print("\a\a\a")
 
