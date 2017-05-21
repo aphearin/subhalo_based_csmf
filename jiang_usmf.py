@@ -28,7 +28,9 @@ jiang14_param_dict['alpha2'] = alpha2_jiang14
 def unevolved_subhalo_mass_function(log10_mu,
         beta=beta_jiang14, zeta=zeta_jiang14, gamma1=gamma1_jiang14,
         alpha1=alpha1_jiang14, gamma2=gamma2_jiang14, alpha2=alpha2_jiang14):
-    """ Average number of subhalos of mass mu = Msub/Mhost
+    """ Average number of subhalos of mass mu = Msub/Mhost.
+
+    ((gamma1 * mu**alpha1) + (gamma2 * mu**alpha2)) * exp(-beta * mu**zeta)
     """
     mu = 10.**log10_mu
     prefactor_term1 = gamma1*mu**alpha1
