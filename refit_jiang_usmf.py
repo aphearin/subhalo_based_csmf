@@ -14,7 +14,7 @@ hosts, subs = SampleSelector.host_halo_selection(table=halocat.halo_table, retur
 log10_msub_min = 11
 subhalo_mpeak_cut = 10**log10_msub_min
 
-log10_mhost_min = max(11.75, log10_msub_min)
+log10_mhost_min = max(11.25, log10_msub_min)
 log10_mhost_max = 14.75
 
 subhalo_sample_mask = subs['halo_mpeak'] > subhalo_mpeak_cut

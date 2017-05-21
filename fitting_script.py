@@ -9,13 +9,13 @@ from refit_jiang_usmf import chi2_subhalo_counts
 import csv
 
 
-beta_min, beta_max, num_beta = 4.5, 7.5, 10
+beta_min, beta_max, num_beta = 3.5, 4.5, 5
 beta_grid_default = np.linspace(beta_min, beta_max, num_beta)
 
-alpha1_min, alpha1_max, num_alpha1 = -0.8, -1, 15
+alpha1_min, alpha1_max, num_alpha1 = -0.85, -1, 10
 alpha1_grid_default = np.linspace(alpha1_min, alpha1_max, num_alpha1)
 
-gamma2_min, gamma2_max, num_gamma2 = 0.1, 1.5, 25
+gamma2_min, gamma2_max, num_gamma2 = 0.1, 0.5, 15
 gamma2_grid_default = np.linspace(gamma2_min, gamma2_max, num_gamma2)
 
 

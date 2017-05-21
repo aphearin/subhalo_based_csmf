@@ -130,3 +130,15 @@ def monte_carlo_subhalo_population(mhost_array, log10_msub_min, log10_mhost_bins
             mhost_array[host_halo_mask], mc_nsub[host_halo_mask])
 
     return mc_nsub, mc_subhalo_mpeak
+
+
+def read_best_fit_params(fname):
+    d = OrderedDict()
+    with open(fname, 'r') as f:
+        for raw_line in f:
+            line = raw_line.strip().split(',')
+            d[line[0]] = float(line[1])
+    return d
+
+
+best_fit_param_dict = read_best_fit_params('best_fit_param_dict.txt')
