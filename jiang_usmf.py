@@ -4,6 +4,7 @@ the Jiang & van den Bosch 2014 fitting function for the unevolved subhalo mass f
 import numpy as np
 from scipy.integrate import quad
 from scipy.stats import poisson
+from collections import OrderedDict
 
 
 __all__ = ('unevolved_subhalo_mass_function', )
@@ -15,6 +16,13 @@ gamma1_jiang14 = 0.13
 alpha1_jiang14 = -0.83
 gamma2_jiang14 = 1.33
 alpha2_jiang14 = -0.02
+jiang14_param_dict = OrderedDict()
+jiang14_param_dict['beta'] = beta_jiang14
+jiang14_param_dict['zeta'] = zeta_jiang14
+jiang14_param_dict['gamma1'] = gamma1_jiang14
+jiang14_param_dict['alpha1'] = alpha1_jiang14
+jiang14_param_dict['gamma2'] = gamma2_jiang14
+jiang14_param_dict['alpha2'] = alpha2_jiang14
 
 
 def unevolved_subhalo_mass_function(log10_mu,
