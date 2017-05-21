@@ -117,7 +117,12 @@ def monte_carlo_subhalo_population(mhost_array, log10_msub_min, log10_mhost_bins
 
     log10_mhost_bins[-1] = log10_mhost_bins[-1] + 0.001
     mean_nsub = mean_nsub_vs_mhost(mhost_array, log10_msub_min, **kwargs)
-    mc_nsub = poisson.rvs(np.maximum(mean_nsub, 0))
+
+    try:
+        uniform_variate = kwargs['percentile']
+    except:
+        uniform_variate = np.random.rand(len(mean_nsub))
+    mc_nsub = poisson.isf(1 - uniform_variate, np.maximum(mean_nsub, 0))
 
     log10_mhost_array = np.log10(mhost_array)
     mc_subhalo_mpeak = np.zeros(np.sum(mc_nsub)) - 1
