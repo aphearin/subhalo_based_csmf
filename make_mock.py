@@ -48,8 +48,10 @@ def make_mock(hosts, subs, **kwargs):
     log10_msub_min = np.log10(subs['halo_mpeak'].min())
     mc_nsub, mc_subhalo_mpeak = monte_carlo_subhalo_population(
         hosts['halo_mvir'], log10_msub_min, np.log10(mhost_bin_edges), **best_fit_param_dict)
-
+    num_sats = int(np.sum(mc_nsub))
     mpeak_mock = np.append(hosts['halo_mpeak'], mc_subhalo_mpeak)
+    is_central = np.ones_like(mpeak_mock).astype(bool)
+    is_central[num_sats:] = False
 
     model = Behroozi10SmHm(redshift=0)
     sm_satellites = model.mc_stellar_mass(prim_haloprop=mc_subhalo_mpeak)
@@ -58,4 +60,6 @@ def make_mock(hosts, subs, **kwargs):
 
     mhost_mock = np.append(hosts['halo_mvir'], np.repeat(hosts['halo_mvir'], mc_nsub))
 
-    return mpeak_mock, sm_mock, mhost_mock
+    sm_min = kwargs.get('sm_min', -np.inf)
+    mask = sm_mock > sm_min
+    return is_central[mask], mpeak_mock[mask], sm_mock[mask], mhost_mock[mask]
